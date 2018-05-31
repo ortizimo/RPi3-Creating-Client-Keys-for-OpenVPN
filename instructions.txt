@@ -1,0 +1,85 @@
+********************************************************
+Creating Client Keys for OpenVPN
+********************************************************
+Author: Saulo S. Ortiz
+Date: 20170103
+
+CREATE CLIENT KEY
+o	./build-key client1
+	this can be any other name but take note of new name for later configurations
+	hit enter on all defaults
+	do not enter a password
+	do not enter company name
+o	enter “y” twice
+o	cd keys
+o	ls (to confirm files were created)
+	ca.crt
+	client1.crt
+	client1.key
+o	cp client1.crt client1.key ca.crt ~/client -v
+o	cd ~/client
+o	cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf ~/client -v
+o	ls (to confirm)
+	ca.crt
+	client1.key
+	client1.crt
+	client.conf
+•	rename file
+o	mv client.conf client1.opnv
+o	cd /etc/openvpn/easy-rsa/keys
+o	cp ca.crt client1.crt client1.key ~/client -v
+o	cd ~/client
+o	ls (to confirm files)
+	ca.crt
+	client1.crt
+	client1.key
+	client1.ovpn
+o	do not exit yet!
+
+FILES COMPILATION SETUP
+o	ifconfig
+o	copy eth0_IP to clipboard
+	highlight IP to copy/right click to paste
+	verify tun0 interface is still running
+•	nano client1.ovpn
+o	find line remote my-server
+o	change to remote eth0_IP 1194
+	wlan0_IP if using Wi-Fi devices
+o	find word nobody
+	remove “;” from both user and group lines
+o	scroll down and find:
+	ca ca.crt
+	cert client.crt
+	key client.key
+o	add # to all three lines
+•	ctrl-x, y, enter
+o	do not exit yet!
+
+COMPILE FILES
+o	ls (to confirm files)
+o	echo “<ca>” >> client1.ovpn
+o	cat ca.crt >> client1.ovpn
+o	echo “</ca>” >> client1.ovpn
+---------------------------------------
+o	echo “<cert>” >> client1.ovpn
+o	cat client1.crt >> client1.ovpn
+o	echo “</cert>” >> client1.ovpn
+---------------------------------------
+o	echo “<key>” >> client1.ovpn
+o	cat client1.key >> client1.ovpn
+o	echo “</key>” >> client1.ovpn
+	>> to append
+	> to replace
+o	exit
+
+TRANSFER FILES TO CLIENTS
+o	cp ~/client/client1.ovpn /etc/openvpn -v
+o	exit
+•	go to client machine
+•	pscp pi@IP_ADDRESS:/etc/client1.ovpn .
+o	can also use scp
+•	enter password
+RUN OPENVPN FROM CLIENT
+•	sudo openvpn client1.ovpn
+•	enter password
+•	check IP address with browser
