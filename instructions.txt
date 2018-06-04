@@ -1,8 +1,9 @@
-********************************************************
+﻿********************************************************
+Straightforward Training™
 Creating Client Keys for OpenVPN
-********************************************************
 Author: Saulo S. Ortiz
 Date: 20170103
+********************************************************
 
 CREATE CLIENT KEY
   •./build-key client1
@@ -85,3 +86,4 @@ RUN OPENVPN FROM CLIENT
   • sudo openvpn client1.ovpn
   • enter password
   • check IP address with browser
+er
